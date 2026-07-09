@@ -1,17 +1,10 @@
 import { test, expect } from '@playwright/test';
-
-test('should open the login page successfully', async ({ page }) => {
-  await page.goto('https://practicetestautomation.com/practice-test-login/?utm_source=chatgpt.com');
-  await expect(page).toHaveURL('https://practicetestautomation.com/practice-test-login/?utm_source=chatgpt.com');
-
-  const title = await page.title();
-  await expect(title).toBe('Test Login | Practice Test Automation');
-  
-});
+import './hooks';
+import { LoginPage } from './loginpage';
+/*
 
 test('Test successful login', async ({ page }) => {
   
-    await page.goto('https://practicetestautomation.com/practice-test-login/?utm_source=chatgpt.com');
     await expect(page.locator('#username')).toHaveAttribute('type', 'text');
     await page.getByLabel('Username').fill('student');
     await expect(page.locator('#password')).toHaveAttribute('type', 'password');
@@ -35,27 +28,59 @@ test('Test successful login', async ({ page }) => {
 });
 
 test('Test unsuccessful login with invalid username credentials', async ({ page }) => {
-    await page.goto('https://practicetestautomation.com/practice-test-login/?utm_source=chatgpt.com');
     await page.getByLabel('Username').fill('invalidUser');
     await page.getByLabel('Password').fill('Password123');
    // await expect(page.getByRole('button', { name: 'Submit' })).toBeDisabled();
     await page.getByRole('button', { name: 'Submit' }).click();
-    await expect(page).toHaveURL('https://practicetestautomation.com/practice-test-login/?utm_source=chatgpt.com');
+    await expect(page).toHaveURL('https://practicetestautomation.com/practice-test-login/');
     const errorMessage = await page.locator('.show').textContent();
     await expect(errorMessage).toBe('Your username is invalid!');
     console.log("Error message is displayed: " + errorMessage);
   });
 
 test('Test unsuccessful login with invalid password credentials', async ({ page }) => {
-    await page.goto('https://practicetestautomation.com/practice-test-login/?utm_source=chatgpt.com');
     await page.getByLabel('Username').fill('student');
     await page.getByLabel('Password').fill('invalidPassword');
     await page.getByRole('button', { name: 'Submit' }).click();
-    await expect(page).toHaveURL('https://practicetestautomation.com/practice-test-login/?utm_source=chatgpt.com');
+    await expect(page).toHaveURL('https://practicetestautomation.com/practice-test-login/');
     const errorMessage = await page.locator('.show').textContent();
     await expect(errorMessage).toBe('Your password is invalid!');
     console.log("Error message is displayed: " + errorMessage);
   });
+  */
+ test('Successful Login', async ({ page }) => {
+
+    const loginPage = new LoginPage(page);
+
+    await loginPage.login('student', 'Password123');
+
+    await loginPage.verifySuccessfulLogin();
+
+    await loginPage.logout();
+});
+
+test('Invalid Username', async ({ page }) => {
+
+    const loginPage = new LoginPage(page);
+
+    await loginPage.login('invalidUser', 'Password123');
+
+    await loginPage.verifyInvalidUsername();
+
+});
+
+test('Invalid Password', async ({ page }) => {
+
+    const loginPage = new LoginPage(page);
+
+    await loginPage.login('student', 'invalidPassword');
+
+    await loginPage.verifyInvalidPassword();
+
+});
+
+
+ 
 
 
 
